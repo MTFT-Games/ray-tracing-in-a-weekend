@@ -9,6 +9,7 @@ public:
     // Image
     double aspectRatio = 16.0 / 9.0;
     int imageWidth = 400;
+    int samplesPerPixel = 1;
 	
 	void Render(const Hittable& world) {
         Initialize();
@@ -21,14 +22,15 @@ public:
             // \r goes to line start without entering a new line, overwriting the last update
             std::clog << "\rScanlines remaining: " << (imageHeight - y) << ' ' << std::flush;
             for (int x = 0; x < imageWidth; ++x) {
-                // Calculate and launch ray
-                Vec3 pixelCenter = firstPixelPos + (x * pixelDeltaU) + (y * pixelDeltaV);
-                Vec3 rayDirection = pixelCenter - cameraCenter;
-                Ray ray(cameraCenter, rayDirection);
+                // Calculate and launch rays
+                Color pixelColor(0,0,0);
+                for (size_t sample = 0; sample < samplesPerPixel; sample++)
+                {
+                    Ray ray = GetRay(x, y);
+                    pixelColor += RayColor(ray, world);
+                }
 
-                Color pixelColor = RayColor(ray, world);
-
-                WriteColor(std::cout, pixelColor);
+                WriteColor(std::cout, pixelColor, samplesPerPixel);
             }
         }
 
@@ -64,6 +66,22 @@ private:
             cameraCenter - Vec3(0, 0, focalLength) - viewportU / 2 - viewportV / 2;
         firstPixelPos = viewportUpperLeft + 0.5 * (pixelDeltaU + pixelDeltaV);
 	}
+
+    // Get a randomly sampled camera ray for the pixel
+    Ray GetRay(int x, int y) const {
+        Vec3 pixelCenter = firstPixelPos + (x * pixelDeltaU) + (y * pixelDeltaV);
+        Vec3 pixelSample = pixelCenter + PixelDeviance();
+
+        Vec3 rayDirection = pixelSample - cameraCenter;
+
+        return Ray(cameraCenter, rayDirection);
+    }
+
+    Vec3 PixelDeviance() const {
+        double xDelta = -0.5 + RandomDouble();
+        double yDelta = -0.5 + RandomDouble();
+        return (xDelta * pixelDeltaU) + (yDelta * pixelDeltaV);
+    }
 
     // Calculate color of first hit or sky
     Color RayColor(const Ray& ray, const Hittable& world) const {
