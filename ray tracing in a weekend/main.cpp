@@ -5,7 +5,7 @@
 #include "Ray.h"
 
 // Sphere ray collision
-bool HitSphere(const Point3& center, double radius, const Ray& ray) {
+double HitSphere(const Point3& center, double radius, const Ray& ray) {
     Vec3 centerToRay = ray.Origin() - center;
 
     // Quadratic math
@@ -13,15 +13,22 @@ bool HitSphere(const Point3& center, double radius, const Ray& ray) {
     double b = 2.0 * Dot(centerToRay, ray.Direction());
     double c = Dot(centerToRay, centerToRay) - radius * radius;
     double discriminant = b * b - 4 * a * c;
-    return (discriminant >= 0);
+
+    if (discriminant < 0) {
+        return -1.0;
+    }
+    return (-b - sqrt(discriminant)) / (2.0 * a);
 }
 
 
 // Calculate color of first hit or sky
 Color RayColor(const Ray& ray) {
-    if (HitSphere(Point3(0, 0, -1), -0.5, ray))
+    double t = HitSphere(Point3(0, 0, -1), -0.5, ray);
+    if (t > 0.0)
     {
-        return Color(1, 0, 0);
+        // Normal as color
+        Vec3 normal = UnitVector(ray.At(t) - Vec3(0, 0, -1));
+        return 0.5 * Color(normal.x() + 1, normal.y() + 1, normal.z() + 1);   
     }
 
     // Miss to skybox
