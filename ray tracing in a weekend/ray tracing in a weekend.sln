@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33122.133
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ray tracing in a weekend", "ray tracing in a weekend.vcxproj", "{8C5DED31-40AF-45AE-BB07-A35295E7FBD5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C5DED31-40AF-45AE-BB07-A35295E7FBD5}.Debug|x64.ActiveCfg = Debug|x64
+		{8C5DED31-40AF-45AE-BB07-A35295E7FBD5}.Debug|x64.Build.0 = Debug|x64
+		{8C5DED31-40AF-45AE-BB07-A35295E7FBD5}.Debug|x86.ActiveCfg = Debug|Win32
+		{8C5DED31-40AF-45AE-BB07-A35295E7FBD5}.Debug|x86.Build.0 = Debug|Win32
+		{8C5DED31-40AF-45AE-BB07-A35295E7FBD5}.Release|x64.ActiveCfg = Release|x64
+		{8C5DED31-40AF-45AE-BB07-A35295E7FBD5}.Release|x64.Build.0 = Release|x64
+		{8C5DED31-40AF-45AE-BB07-A35295E7FBD5}.Release|x86.ActiveCfg = Release|Win32
+		{8C5DED31-40AF-45AE-BB07-A35295E7FBD5}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3E847C54-E4FF-4302-ACF6-E8C76DDF1EA4}
+	EndGlobalSection
+EndGlobal
