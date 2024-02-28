@@ -9,15 +9,15 @@ double HitSphere(const Point3& center, double radius, const Ray& ray) {
     Vec3 centerToRay = ray.Origin() - center;
 
     // Quadratic math
-    double a = Dot(ray.Direction(), ray.Direction());
-    double b = 2.0 * Dot(centerToRay, ray.Direction());
-    double c = Dot(centerToRay, centerToRay) - radius * radius;
-    double discriminant = b * b - 4 * a * c;
+    double a = ray.Direction().LengthSquared();
+    double halfB = Dot(centerToRay, ray.Direction());
+    double c = centerToRay.LengthSquared() - radius * radius;
+    double discriminant = halfB * halfB - a * c;
 
     if (discriminant < 0) {
         return -1.0;
     }
-    return (-b - sqrt(discriminant)) / (2.0 * a);
+    return (-halfB - sqrt(discriminant)) / a;
 }
 
 
