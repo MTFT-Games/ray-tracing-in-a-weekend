@@ -4,8 +4,27 @@
 #include "Vec3.h"
 #include "Ray.h"
 
-// Blend from white to blue on elevation of ray
+// Sphere ray collision
+bool HitSphere(const Point3& center, double radius, const Ray& ray) {
+    Vec3 centerToRay = ray.Origin() - center;
+
+    // Quadratic math
+    double a = Dot(ray.Direction(), ray.Direction());
+    double b = 2.0 * Dot(centerToRay, ray.Direction());
+    double c = Dot(centerToRay, centerToRay) - radius * radius;
+    double discriminant = b * b - 4 * a * c;
+    return (discriminant >= 0);
+}
+
+
+// Calculate color of first hit or sky
 Color RayColor(const Ray& ray) {
+    if (HitSphere(Point3(0, 0, -1), -0.5, ray))
+    {
+        return Color(1, 0, 0);
+    }
+
+    // Miss to skybox
     Vec3 unitVector = UnitVector(ray.Direction());
     double scaledY = 0.5 * (unitVector.y() + 1.0);
     // Scale from white to blue based on y
