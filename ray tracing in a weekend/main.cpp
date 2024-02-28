@@ -1,34 +1,17 @@
 #include <iostream>
 
+#include "utility.h"
 #include "Color.h"
-#include "Vec3.h"
-#include "Ray.h"
-
-// Sphere ray collision
-double HitSphere(const Point3& center, double radius, const Ray& ray) {
-    Vec3 centerToRay = ray.Origin() - center;
-
-    // Quadratic math
-    double a = ray.Direction().LengthSquared();
-    double halfB = Dot(centerToRay, ray.Direction());
-    double c = centerToRay.LengthSquared() - radius * radius;
-    double discriminant = halfB * halfB - a * c;
-
-    if (discriminant < 0) {
-        return -1.0;
-    }
-    return (-halfB - sqrt(discriminant)) / a;
-}
+#include "Hittable.h"
+#include "HittableList.h"
+#include "Sphere.h"
 
 
 // Calculate color of first hit or sky
-Color RayColor(const Ray& ray) {
-    double t = HitSphere(Point3(0, 0, -1), -0.5, ray);
-    if (t > 0.0)
-    {
-        // Normal as color
-        Vec3 normal = UnitVector(ray.At(t) - Vec3(0, 0, -1));
-        return 0.5 * Color(normal.x() + 1, normal.y() + 1, normal.z() + 1);   
+Color RayColor(const Ray& ray, const Hittable& world) {
+    HitRecord record;
+    if (world.Hit(ray, Interval(0, infinity), record)) {
+        return 0.5 * (record.normal + Color(1, 1, 1));
     }
 
     // Miss to skybox
@@ -47,6 +30,11 @@ int main() {
     // Calculate height from aspect and ensure its at least 1
     int imageHeight = imageWidth / aspectRatio;
     imageHeight = (imageHeight < 1) ? 1 : imageHeight;
+
+    // World
+    HittableList world;
+    world.Add(make_shared<Sphere>(Point3(0,0,-1), 0.5));
+    world.Add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
     // Camera
     double focalLength = 1.0;
@@ -79,7 +67,7 @@ int main() {
             Vec3 rayDirection = pixelCenter - cameraCenter;
             Ray ray(cameraCenter, rayDirection);
 
-            Color pixelColor = RayColor(ray);
+            Color pixelColor = RayColor(ray, world);
 
             WriteColor(std::cout, pixelColor);
         }
