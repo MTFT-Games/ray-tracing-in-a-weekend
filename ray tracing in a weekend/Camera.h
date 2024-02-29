@@ -10,6 +10,7 @@ public:
     double aspectRatio = 16.0 / 9.0;
     int imageWidth = 400;
     int samplesPerPixel = 1;
+    int maxDepth = 10;
 	
 	void Render(const Hittable& world) {
         Initialize();
@@ -27,7 +28,7 @@ public:
                 for (size_t sample = 0; sample < samplesPerPixel; sample++)
                 {
                     Ray ray = GetRay(x, y);
-                    pixelColor += RayColor(ray, world);
+                    pixelColor += RayColor(ray, maxDepth, world);
                 }
 
                 WriteColor(std::cout, pixelColor, samplesPerPixel);
@@ -84,10 +85,16 @@ private:
     }
 
     // Calculate color of first hit or sky
-    Color RayColor(const Ray& ray, const Hittable& world) const {
+    Color RayColor(const Ray& ray, int depth, const Hittable& world) const {
         HitRecord record;
-        if (world.Hit(ray, Interval(0, infinity), record)) {
-            return 0.5 * (record.normal + Color(1, 1, 1));
+        if (depth <= 0)
+        {
+            return Color();
+        }
+
+        if (world.Hit(ray, Interval(0.001, infinity), record)) {
+            Vec3 direction = record.normal + RandomUnitVector();
+            return 0.5 * RayColor(Ray(record.position, direction), depth-1, world);    //normal test 0.5* (record.normal + Color(1, 1, 1));
         }
 
         // Miss to skybox

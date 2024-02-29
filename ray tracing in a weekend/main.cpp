@@ -13,8 +13,9 @@ int main() {
 
     // Camera
     Camera camera;
-    camera.imageWidth = 1000;
-    camera.samplesPerPixel = 50;
+    camera.imageWidth = 400;
+    camera.samplesPerPixel = 1000;
+    camera.maxDepth = 50;
 
     // Render
     camera.Render(world);
